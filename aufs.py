@@ -42,7 +42,7 @@ def exec_sh(cmd, debug=False):
     """ Executes shell command """
     if debug:
         sys.stderr.write("# " + " ".join(cmd) + "\n")
-    return subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+    return subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0].decode("utf-8")
 
 
 RE_MTAB = re.compile(r"^(.*) on ([^ ]*) type (.*) \((.*)\)$")
@@ -82,7 +82,7 @@ def get_aufs2_branches(mtab_entry):
     si_opt = [opt.split("=", 1)[1] for opt in mtab_entry.get(
         "options") if opt.startswith("si=")][0]
     si_dir = "/sys/fs/aufs/si_%s" % si_opt
-    return [open(os.path.join(si_dir, f)).read().strip()
+    return [open(os.path.join(si_dir, f)).read().decode("utf-8").strip()
             for f in os.listdir(si_dir) if f.startswith("br")]
 
 
